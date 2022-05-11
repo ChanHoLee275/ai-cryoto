@@ -1,5 +1,6 @@
 from datetime import datetime
 import requests
+import os
 
 def timestamp_to_date(timestamp):
     date  = datetime.fromtimestamp(int(timestamp)/1000)
@@ -29,4 +30,16 @@ def create_csv_file(filename):
     fs = open(filename, 'a')
     fs.write("price,quantity,type,timestamp\n")
     fs.close()
+    return 0
+
+def write_csv(orderbooks={}):
+	# write order book in file
+    date = datetime.now()
+    filename = str(date.year) + '-' + str(date.month) + '-' + str(date.day) + '-bithumb-btc-orderbook.csv'
+    if not os.path.exists(filename):
+        create_csv_file(filename)
+    fs = open(filename, 'a')
+    results = list(reversed(orderbooks['asks'])) + list(reversed(orderbooks['bids']))
+    for i in results:
+        fs.write(i + '\n')
     return 0
