@@ -43,3 +43,11 @@ def write_csv(orderbooks={}):
     for i in results:
         fs.write(i + '\n')
     return 0
+
+def main():
+    res = request_order_book()
+    if not is_validate_response(res) or res['status'] != "0000":
+        print('error! response is not validate')
+        return 0
+    order_book = create_orderbook(res = res)
+    write_csv(order_book)
