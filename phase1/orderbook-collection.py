@@ -1,4 +1,5 @@
 from datetime import datetime
+from apscheduler.schedulers.background import BlockingScheduler
 import requests
 import os
 
@@ -44,6 +45,9 @@ def write_csv(orderbooks={}):
         fs.write(i + '\n')
     return 0
 
+scheduler = BlockingScheduler()
+
+@scheduler.scheduled_job('interval', seconds=1, id='save_data')
 def main():
     res = request_order_book()
     if not is_validate_response(res) or res['status'] != "0000":
@@ -51,3 +55,5 @@ def main():
         return 0
     order_book = create_orderbook(res = res)
     write_csv(order_book)
+
+scheduler.start()
