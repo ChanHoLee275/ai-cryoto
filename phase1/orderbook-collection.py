@@ -24,3 +24,9 @@ def create_orderbook(level=15, res={}):
     order_book_bids = list(map(lambda x: x['price'] + ',' + "{:.6f}".format(float(x['quantity'])) + ',' + '1,' + timestamp_to_date(res['data']['timestamp']) ,sortedBids))
     order_book_asks = list(map(lambda x: x['price'] + ',' + "{:.6f}".format(float(x['quantity'])) + ',' + '0,' + timestamp_to_date(res['data']['timestamp']) ,sortedAsks))
     return {'bids': order_book_bids, 'asks': order_book_asks}
+
+def create_csv_file(filename):
+    fs = open(filename, 'a')
+    fs.write("price,quantity,type,timestamp\n")
+    fs.close()
+    return 0
