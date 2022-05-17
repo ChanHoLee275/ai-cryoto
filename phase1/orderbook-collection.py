@@ -13,7 +13,7 @@ def request_order_book():
     try:
         res = requests.get('https://api.bithumb.com/public/orderbook/BTC_KRW/?count=15')
     except:
-        log.write('NetworkError!\n')
+        log.write("NetworkError!\n")
     return res.json()
 
 def is_validate_response(res: requests.Response):
@@ -38,9 +38,9 @@ def create_csv_file(filename):
     fs.close()
     return 0
 
-def write_csv(orderbooks={}):
+def write_csv(orderbooks={}, timestamp=0):
 	# write order book in file
-    date = datetime.now()
+    date = datetime.fromtimestamp(int(timestamp)/1000)
     filename = str(date.year) + '-' + str(date.month) + '-' + str(date.day) + '-bithumb-btc-orderbook.csv'
     if not os.path.exists(filename):
         create_csv_file(filename)
@@ -56,10 +56,9 @@ scheduler = BlockingScheduler()
 def main():
     res = request_order_book()
     if not is_validate_response(res) or res['status'] != "0000":
-        print('error! response is not validate')
-	log.write('ResponseInvalidate')
+        log.write("invalid response : " + str(datetime.now()))
         return 0
     order_book = create_orderbook(res = res)
-    write_csv(order_book)
+    write_csv(order_book, int(res['data']['timestamp']))
 
 scheduler.start()
