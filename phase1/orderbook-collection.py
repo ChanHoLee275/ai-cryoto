@@ -3,12 +3,17 @@ from apscheduler.schedulers.background import BlockingScheduler
 import requests
 import os
 
+log = open('log.txt', 'a')
+
 def timestamp_to_date(timestamp):
     date  = datetime.fromtimestamp(int(timestamp)/1000)
     return str(date)
 
 def request_order_book():
-    res = requests.get('https://api.bithumb.com/public/orderbook/BTC_KRW/?count=15')
+    try:
+        res = requests.get('https://api.bithumb.com/public/orderbook/BTC_KRW/?count=15')
+    except:
+        log.write('NetworkError!\n')
     return res.json()
 
 def is_validate_response(res: requests.Response):
@@ -52,6 +57,7 @@ def main():
     res = request_order_book()
     if not is_validate_response(res) or res['status'] != "0000":
         print('error! response is not validate')
+	log.write('ResponseInvalidate')
         return 0
     order_book = create_orderbook(res = res)
     write_csv(order_book)
