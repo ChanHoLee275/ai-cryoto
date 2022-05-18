@@ -6,7 +6,7 @@ import os
 log = open('log.txt', 'a')
 
 def timestamp_to_date(timestamp):
-    date  = datetime.fromtimestamp(int(timestamp))
+    date  = datetime.fromtimestamp(timestamp)
     return str(date)
 
 def request_order_book():
