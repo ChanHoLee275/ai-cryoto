@@ -48,6 +48,7 @@ def write_csv(orderbooks={}, timestamp=0):
     results = list(reversed(orderbooks['asks'])) + list(reversed(orderbooks['bids']))
     for i in results:
         fs.write(i + '\n')
+    fs.close()
     return 0
 
 scheduler = BlockingScheduler()
